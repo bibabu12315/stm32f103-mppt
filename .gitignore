@@ -1,0 +1,45 @@
+# ���� VSCode ���ã��������Ҫ����Ļ���
+.vscode/
+
+# ���� Keil/ARM �������Ŀ¼
+OBJ/
+
+# ���� Keil ��������ĳ����м��ļ�
+*.o
+*.d
+*.crf
+*.lst
+*.map
+*.bak
+*.axf
+*.htm
+*.lnp
+*.dep
+*.uvgui*
+*.uvoptx
+*.uvguix
+*.uvopt
+*.sct
+
+# ������ʱ�ļ�
+*.tmp
+*.log
+
+# �������ɵ� BIN/HEX �ļ���������ǹ̼������
+*.bin
+*.hex
+# Keil ����/�����ļ�
+*.dbgconf
+*.uvoptx
+*.uvguix.*
+*.scvd
+
+# �������
+*.lst
+*.map
+
+# J-Link ���
+JLinkLog.txt
+JLinkSettings.ini
+网络.lnk
+generate_cpp_properties.py
