@@ -29,10 +29,14 @@ void Para_Split(u8 *table, int32_t var)
 void Display_Blink_Dynamic_Vars(void)
 {
 	u8 Middle_temp[6] = {0};
-	if (Set_Para.Set_Work_Mode != MPPT_MODE)
-		OLED_ShowString(40, 0, "CC/CV", 16); // 如果工作模式不是MPPT模式，则展示CC/CV模式
+	if (Set_Para.Set_Work_Mode == CVCC_MODE)
+		OLED_ShowString(40, 0, "CC/CV", 16); // 如果工作模式是CC/CV模式，则展示CC/CV模式
 	else if (Set_Para.Set_Work_Mode == MPPT_MODE)
-		OLED_ShowString(40, 0, "MPPT ", 16); // 如果工作模式是MPPT模式，则展示MPPT模式
+		OLED_ShowString(40, 0, "MPPT", 16); // 如果工作模式是MPPT模式，则展示MPPT模式
+	else if (Set_Para.Set_Work_Mode == MPPT_Vari_PO_MODE)
+		OLED_ShowString(40, 0, "POMPPT", 16); // 如果工作模式是变步长PO-MPPT模式，则展示PO-MPPT模式
+	else if (Set_Para.Set_Work_Mode == MPPT_INC_MODE)
+		OLED_ShowString(40, 0, "INCMPPT", 16); // 如果工作模式是电导INC-MPPT模式，则展示INC-MPPT模式
 
 	// 保存设置电压的每一位，小数点后一位保留
 	Para_Split(Middle_temp, Set_Para.Set_Vo_Parameter);
@@ -53,10 +57,14 @@ void Display_Blink_Dynamic_Vars(void)
 void Display_Normal_Dynamic_Vars(void)
 {
 	u8 Middle_temp[6] = {0};
-	if (Set_Para.Real_Work_Mode != MPPT_MODE)
+	if (Set_Para.Real_Work_Mode == CVCC_MODE)
 		OLED_ShowString(40, 0, "CC/CV", 16);
 	else if (Set_Para.Real_Work_Mode == MPPT_MODE)
-		OLED_ShowString(40, 0, "MPPT ", 16);
+		OLED_ShowString(40, 0, "MPPT", 16);
+	else if (Set_Para.Real_Work_Mode == MPPT_Vari_PO_MODE)
+		OLED_ShowString(40, 0, "POMPPT", 16);
+	else if (Set_Para.Real_Work_Mode == MPPT_INC_MODE)
+		OLED_ShowString(40, 0, "INCMPPT", 16);
 
 	// 保存实际电压的每一位，小数点后一位保留
 	Para_Split(Middle_temp, Set_Para.Real_Vo_Parameter);
@@ -84,10 +92,10 @@ void Normal_Display(void)
 		else
 		{
 			// 光标位置
-			switch (cur_position)
+			switch (cur_position) // 控制光标闪烁
 			{
 			case 0: // 光标在Mode:CC/CV位置
-				OLED_ShowString(40, 0, "     ", 16);
+				OLED_ShowString(40, 0, "       ", 16);
 				break;
 			case 1: // 光标在Set:**.*V
 				OLED_ShowString(32, 6, "     ", 16);

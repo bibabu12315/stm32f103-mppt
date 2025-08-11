@@ -24,7 +24,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
 /**********************变量定义与声明*************************/
-extern volatile uint32_t sysTickMillis;
 
 void NMI_Handler(void)
 {
@@ -76,7 +75,6 @@ void PendSV_Handler(void)
 
 void SysTick_Handler(void)
 {
-  sysTickMillis++;
 }
 
 /******************************************************************************/

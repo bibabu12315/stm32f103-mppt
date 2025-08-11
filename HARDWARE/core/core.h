@@ -17,6 +17,7 @@ extern struct _IOP IO_Para; // 输入输出参数
 extern uint8_t ADC_SAMPLE_OVER_FLAG;
 extern volatile uint16_t OLEDShowCnt;
 extern volatile uint16_t Sys_Check_Cnt;
+extern volatile uint16_t Sys_Mppt_Cnt;
 // extern bool OUTPUT_FLAG;//输出使能标志位
 extern struct _SETP Set_Para;
 // 函数声明
@@ -86,8 +87,11 @@ typedef enum
 // 工作模式枚举变量
 typedef enum
 {
-	MPPT_MODE,
-	CVCC_MODE, // CV//CC模式
+	MPPT_MODE = 0,	   // 固定步长PO——MPPT算法			 //0
+	CVCC_MODE,		   // CV//CC模式				    //1
+	MPPT_Vari_PO_MODE, // 变步长扰动PO——mppt算法		//2
+	MPPT_INC_MODE,	   // 电导INC——mppt算法			    //3
+	MODE_COUNT		   // 模式总数						//4
 } SWork_M;
 
 // 输出参数结构体

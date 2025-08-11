@@ -102,7 +102,7 @@ void EXTI1_IRQHandler(void)
 				set_button = NO_PRESSURE; // 设置按键按下次数清零
 			}
 		}
-		else
+		else // 光标不闪烁
 		{
 			// 更新标志位开启或则关闭输出
 			// 输出电压小于输入电压的0.85倍
@@ -211,9 +211,10 @@ void TIM3_IRQHandler(void) // TIM3中断  1ms
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) // 检查TIM3更新中断发生与否
 	{
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update); // 清除TIMx更新中断标志
-		num++;
-		OLEDShowCnt++;
-		Sys_Check_Cnt++;
+		num++;										// 光标闪烁计时
+		OLEDShowCnt++;								// OLED刷新计时
+		Sys_Check_Cnt++;							// 各种保护检测与状态机计时
+		Sys_Mppt_Cnt++;								// mppt计时
 
 		// 翻转一次光标闪烁标志位
 		if (num == 100) // 时间0.1s
@@ -277,10 +278,9 @@ void TIM3_IRQHandler(void) // TIM3中断  1ms
 					switch (cur_position)
 					{
 					case 0: // 模式切换
-						if (Set_Para.Set_Work_Mode != MPPT_MODE)
-							Set_Para.Set_Work_Mode = MPPT_MODE;
-						else if (Set_Para.Set_Work_Mode == MPPT_MODE)
-							Set_Para.Set_Work_Mode = CVCC_MODE;
+						Set_Para.Set_Work_Mode++;
+						if (Set_Para.Set_Work_Mode >= MODE_COUNT) // 超过最后一个模式
+							Set_Para.Set_Work_Mode = MPPT_MODE;			  // 回到第一个模式
 
 						break;
 					case 1: // 电压设置
@@ -323,7 +323,7 @@ void TIM3_IRQHandler(void) // TIM3中断  1ms
 			}
 		}
 
-		if (Sys_Check_Cnt == 5) // 5ms
+		/*if (Sys_Check_Cnt == 5) // 5ms
 		{
 			Sys_Check_Cnt = 0;
 
@@ -362,6 +362,6 @@ void TIM3_IRQHandler(void) // TIM3中断  1ms
 					PWM_Adjust(); // 100ms调用一次算法
 				}
 			}
-		}
+		}*/
 	}
 }
