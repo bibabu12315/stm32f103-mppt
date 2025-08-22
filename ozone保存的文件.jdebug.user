@@ -1,0 +1,30 @@
+
+
+GraphedExpression="test_count", DisplayFormat=DISPLAY_FORMAT_DEC, Color=#e56a6f
+GraphedExpression="IO_Para.Duty_Cycle", DisplayFormat=DISPLAY_FORMAT_DEC, Color=#35792b
+OpenDocument="encoder.c", FilePath="D:/project_code/MPPT/mppt-stm32 -project/HARDWARE/ENCODER/encoder.c", Line=196
+OpenDocument="oled.c", FilePath="D:/project_code/MPPT/mppt-stm32 -project/HARDWARE/oled/oled.c", Line=15
+OpenDocument="core.c", FilePath="D:/project_code/MPPT/mppt-stm32 -project/HARDWARE/core/core.c", Line=263
+OpenDocument="startup_stm32f10x_ld.s", FilePath="D:/project_code/MPPT/mppt-stm32 -project/CORE/startup_stm32f10x_ld.s", Line=130
+OpenDocument="main.c", FilePath="D:/project_code/MPPT/mppt-stm32 -project/USER/main.c", Line=68
+OpenToolbar="Debug", Floating=0, x=0, y=0
+OpenWindow="Registers 1", DockArea=RIGHT, x=0, y=0, w=387, h=417, TabPos=2, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, FilteredItems=[], RefreshRate=1
+OpenWindow="Memory 1", DockArea=RIGHT, x=0, y=0, w=387, h=417, TabPos=1, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, EditorAddress=0x0
+OpenWindow="Watched Data 1", DockArea=RIGHT, x=0, y=0, w=387, h=417, TabPos=0, TopOfStack=1, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Functions", DockArea=LEFT, x=0, y=0, w=300, h=417, TabPos=1, TopOfStack=1, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Code Profile", DockArea=LEFT, x=0, y=0, w=300, h=417, TabPos=0, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, GroupByFiles=0, SortRespectsFilters=0, ParentRelativeLoad=0
+OpenWindow="Data Sampling", DockArea=BOTTOM, x=1, y=0, w=1288, h=475, TabPos=1, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, VisibleTab=0, UniformSampleSpacing=0
+OpenWindow="Timeline", DockArea=BOTTOM, x=1, y=0, w=1288, h=475, TabPos=0, TopOfStack=1, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=1, DataPaneShown=1, PowerPaneShown=0, CodePaneShown=0, PinCursor="Cursor Movable", TimePerDiv="1 s / Div", TimeStampFormat="Time", DataGraphDrawAsPoints=0, DataGraphLegendShown=1, DataGraphUniformSampleSpacing=0, DataGraphLegendPosition="0;289", DataGraphShowNamesAtCursor=0, PowerGraphDrawAsPoints=0, PowerGraphLegendShown=0, PowerGraphAvgFilterTime=Off, PowerGraphAvgFilterLen=Off, PowerGraphUniformSampleSpacing=0, PowerGraphLegendPosition="1094;118", CodeGraphLegendShown=0, CodeGraphLegendPosition="1044;0"
+OpenWindow="Console", DockArea=BOTTOM, x=0, y=0, w=631, h=491, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+SmartViewPlugin="", Page="", Toolbar="Hidden", Window="SmartView 1"
+TableHeader="Code Profile", SortCol="File / Function", SortOrder="ASCENDING", VisibleCols=["File / Function";"Source Coverage";"Inst. Coverage";"Run Count";"Fetch Count";"Load"], ColWidths=[691;135;142;100;107;100]
+TableHeader="Functions", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Address";"Size";"#Insts";"Source"], ColWidths=[644;100;100;100;196]
+TableHeader="Data Sampling Table", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";" test_count";" IO_Para.Duty_Cycle"], ColWidths=[100;100;100;619]
+TableHeader="Data Sampling Setup", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Type";"Value";"Min";"Max";"Average";"# Changes";"Min. Change";"Max. Change"], ColWidths=[100;100;100;110;100;102;100;110;466]
+TableHeader="Registers 1", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Description"], ColWidths=[100;118;169]
+TableHeader="Power Sampling", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
+TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]
+TableHeader="Watched Data 1", SortCol="Expression", SortOrder="ASCENDING", VisibleCols=["Expression";"Value";"Location";"Refresh"], ColWidths=[100;100;100;100]
+TableHeader="TargetExceptionDialog", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Address";"Description"], ColWidths=[26;26;26;26]
+WatchedExpression="test_count", Window=Watched Data 1
+WatchedExpression="IO_Para.Duty_Cycle", Window=Watched Data 1

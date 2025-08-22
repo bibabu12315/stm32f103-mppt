@@ -44,10 +44,10 @@ void TIM1_PWM_Init(u16 arr, u16 psc)
 	// 4、 TIM基础设置；
 	// 设置计数频率为72M/1；即每秒中计数值计数72M；
 	// Period设置为719，即计数够720清零，对应PWM频率为72M/720=100Khz；
-	TIM_TimeBaseStructure.TIM_Period = arr - 1;				// 周期为计数720次，计数频率为72M/720；
-	TIM_TimeBaseStructure.TIM_Prescaler = psc - 1;			// 设置频率为72M/1;
-	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; // 不分频，时钟72M
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseStructure.TIM_Period = arr - 1;					// 周期为计数720次，计数频率为72M/720；
+	TIM_TimeBaseStructure.TIM_Prescaler = psc - 1;				// 设置频率为72M/1;
+	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;		// 不分频，时钟72M
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; // 向上计数
 	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
 	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
 	// 5、设置输出比较

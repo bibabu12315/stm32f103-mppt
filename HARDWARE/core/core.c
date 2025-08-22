@@ -75,11 +75,6 @@ void Cal_IO_Para(void)
 bool FIRST_IN_FLAG = TRUE;
 // 取绝对值
 #define ABS(x) ((x) < 0 ? -(x) : (x))
-// 用于变步长PO-MPPT算法
-int16_t deltaP = 0;
-int16_t deltaV = 0;
-uint8_t PO_MPPT_K = 1;	  // k决定步长灵敏度
-int16_t PO_MPPT_Step = 1; // 初始步长
 
 /**
  * @brief 调节PWM占空比
@@ -191,33 +186,33 @@ void PWM_Adjust(void)
 		MPPT_Con_Para.voltageInput = IO_Para.Buck_Vin;
 		MPPT_Con_Para.powerInput = IO_Para.Buck_Pin;
 		// 计算功率变化量 ΔP
-		deltaP = MPPT_Con_Para.powerInput - MPPT_Con_Para.powerInputPrev;
-		deltaV = MPPT_Con_Para.voltageInput - MPPT_Con_Para.voltageInputPrev;
+		MPPT_Con_Para.deltaP = MPPT_Con_Para.powerInput - MPPT_Con_Para.powerInputPrev;
+		MPPT_Con_Para.deltaV = MPPT_Con_Para.voltageInput - MPPT_Con_Para.voltageInputPrev;
 		// 计算步长
-		PO_MPPT_Step = (int)(PO_MPPT_K * ABS(deltaP));
+		MPPT_Con_Para.MPPT_Step = (int)(MPPT_Con_Para.PO_MPPT_K * ABS(MPPT_Con_Para.deltaP));
 
 		// 限制步长范围，防止过大或为 0
-		if (PO_MPPT_Step > 10)
-			PO_MPPT_Step = 10; // 最大步长
-		if (PO_MPPT_Step < 1)
-			PO_MPPT_Step = 1; // 最小步长
+		if (MPPT_Con_Para.MPPT_Step > 10)
+			MPPT_Con_Para.MPPT_Step = 10; // 最大步长
+		if (MPPT_Con_Para.MPPT_Step < 1)
+			MPPT_Con_Para.MPPT_Step = 1; // 最小步长
 
 		// 变步长扰动观察判断
-		if ((deltaP > 0) && (deltaV > 0))
+		if ((MPPT_Con_Para.deltaP > 0) && (MPPT_Con_Para.deltaV > 0))
 		{
-			IO_Para.Duty_Cycle -= PO_MPPT_Step;
+			IO_Para.Duty_Cycle -= MPPT_Con_Para.MPPT_Step;
 		}
-		else if ((deltaP > 0) && (deltaV < 0))
+		else if ((MPPT_Con_Para.deltaP > 0) && (MPPT_Con_Para.deltaV < 0))
 		{
-			IO_Para.Duty_Cycle += PO_MPPT_Step;
+			IO_Para.Duty_Cycle += MPPT_Con_Para.MPPT_Step;
 		}
-		else if ((deltaP < 0) && (deltaV > 0))
+		else if ((MPPT_Con_Para.deltaP < 0) && (MPPT_Con_Para.deltaV > 0))
 		{
-			IO_Para.Duty_Cycle += PO_MPPT_Step;
+			IO_Para.Duty_Cycle += MPPT_Con_Para.MPPT_Step;
 		}
-		else if ((deltaP < 0) && (deltaV < 0))
+		else if ((MPPT_Con_Para.deltaP < 0) && (MPPT_Con_Para.deltaV < 0))
 		{
-			IO_Para.Duty_Cycle -= PO_MPPT_Step;
+			IO_Para.Duty_Cycle -= MPPT_Con_Para.MPPT_Step;
 		}
 
 		// 更新状态——上次输入功率和电压 = 当前输入功率和电压
@@ -232,8 +227,63 @@ void PWM_Adjust(void)
 		TIM_SetCompare1(TIM1, IO_Para.Duty_Cycle);
 		break;
 
+	// 电导inc-mppt算法
 	case MPPT_INC_MODE:
+		// MPPT算法当前输入电压
+		MPPT_Con_Para.voltageInput = IO_Para.Buck_Vin; // 输入电压Vin
+		MPPT_Con_Para.currentInput = IO_Para.Buck_Iin; // 输入电流Iin
+		MPPT_Con_Para.powerInput = IO_Para.Buck_Pin;   // 输入功率Pin
 
+		// 计算电压、电流增量
+		MPPT_Con_Para.deltaV = MPPT_Con_Para.voltageInput - MPPT_Con_Para.voltageInputPrev;
+		MPPT_Con_Para.deltaI = MPPT_Con_Para.currentInput - MPPT_Con_Para.currentInputPrev;
+
+		// 电导法判断
+		if (MPPT_Con_Para.deltaV == 0)
+		{
+			if (MPPT_Con_Para.deltaI == 0)
+			{
+				// 在MPP，不调整
+			}
+			else if (MPPT_Con_Para.deltaI > 0)
+			{
+				// MPP左侧，增加占空比
+				IO_Para.Duty_Cycle += MPPT_Con_Para.MPPT_Step;
+			}
+			else
+			{
+				// MPP右侧，减少占空比
+				IO_Para.Duty_Cycle -= MPPT_Con_Para.MPPT_Step;
+			}
+		}
+		else
+		{
+			// 用交叉相乘的方法避免除法
+			// 比较 ΔI/ΔV 与 -I/V
+			// ΔI * V ? -I * ΔV
+			int32_t left = (int32_t)MPPT_Con_Para.deltaI * MPPT_Con_Para.voltageInput;	 // ΔI * V
+			int32_t right = -(int32_t)MPPT_Con_Para.currentInput * MPPT_Con_Para.deltaV; // -I * ΔV
+
+			if (left == right)
+			{
+				// 在MPP，不调整
+			}
+			else if (left > right)
+			{
+				// MPP左侧，增加占空比
+				IO_Para.Duty_Cycle += MPPT_Con_Para.MPPT_Step;
+			}
+			else
+			{
+				// MPP右侧，减少占空比
+				IO_Para.Duty_Cycle -= MPPT_Con_Para.MPPT_Step;
+			}
+		}
+
+		// 更新状态——上次输入功率和电压 = 当前输入功率和电压
+		MPPT_Con_Para.voltageInputPrev = MPPT_Con_Para.voltageInput;
+		MPPT_Con_Para.currentInputPrev = MPPT_Con_Para.currentInput;
+		MPPT_Con_Para.powerInputPrev = MPPT_Con_Para.powerInput;
 		// 环路输出最大最小占空比限制
 		if (IO_Para.Duty_Cycle > MAX_BUCK_DUTY)
 			IO_Para.Duty_Cycle = MAX_BUCK_DUTY;
@@ -288,6 +338,11 @@ void Buck_StateMInit(void)
 {
 	// 相关参数初始化
 	Buck_ValInit();
+
+	// 初始化mppt算法相关参数
+	MPPT_Con_Para.MPPT_Step = 1; // 初始步长
+	MPPT_Con_Para.PO_MPPT_K = 1; // 变步长po算法比例系数k
+
 	// 状态机跳转至等待软启状态
 	DF.Buck_SMFlag = Wait;
 }
@@ -359,10 +414,10 @@ void Buck_StateMWait(void)
 			TIM_CtrlPWMOutputs(TIM1, ENABLE); // MOE 主输出使能
 			delay_ms(10);
 			TIM_SetCompare1(TIM1, IO_Para.Duty_Cycle);
-//			delay_ms(10);
-//			// 更新上次输入功率和电压——确保第一次进入mppt算法时有上次输入功率和电压
-//			MPPT_Con_Para.voltageInputPrev = IO_Para.Buck_Vin;
-//			MPPT_Con_Para.powerInputPrev = IO_Para.Buck_Pin;
+			//			delay_ms(10);
+			//			// 更新上次输入功率和电压——确保第一次进入mppt算法时有上次输入功率和电压
+			//			MPPT_Con_Para.voltageInputPrev = IO_Para.Buck_Vin;
+			//			MPPT_Con_Para.powerInputPrev = IO_Para.Buck_Pin;
 
 			// 状态机跳转至运行状态
 			DF.Buck_SMFlag = Run;
@@ -394,7 +449,6 @@ void Buck_StateMWait(void)
 */
 void Buck_StateMRun(void)
 {
-
 }
 
 /*

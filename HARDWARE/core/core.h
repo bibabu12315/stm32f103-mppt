@@ -128,6 +128,15 @@ struct _MPPT
 	int32_t powerInputPrev;	  // 上一次输入功率
 	int32_t voltageInput;	  // 当前输入电压
 	int32_t voltageInputPrev; // 上一次输入电压
+	int32_t currentInput;	  // 当前输入电流
+	int32_t currentInputPrev; // 上一次输入电流
+
+	int16_t MPPT_Step; // 初始步长
+	uint8_t PO_MPPT_K; // 变步长——k决定步长灵敏度
+
+	int16_t deltaP; // 功率P增量
+	int16_t deltaV; // 电压V增量
+	int16_t deltaI; // 电流I增量
 };
 // 电池参数结构体
 struct _BAT

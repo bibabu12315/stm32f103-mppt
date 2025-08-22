@@ -10,4 +10,6 @@
 #include "display.h"
 #include "encoder.h"
 
+#include "core_cm3.h"
+
 #endif
